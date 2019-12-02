@@ -394,69 +394,66 @@ public class ui
 	
 	public static void main(String[] args)
 	{
-		//Creating the Frame
 
+	//Creating the Frame
         JFrame frame = new JFrame("TextFormatterz");
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         frame.setSize(1024, 768);
         
         //Creating the panel at bottom and adding components
-
         JPanel spanel = new JPanel(); //holds button panel and messages box and label
-
         JPanel bpanel = new JPanel(); //holds the buttons
-
-        JPanel mespan = new JPanel();
-
-        JPanel outpan = new JPanel();
-
-        JLabel label = new JLabel("Messages:");
-
-        JTextArea output = new JTextArea(); // Text Area at the Center
+        JPanel mespan = new JPanel(); //holds the messages text box
+        JPanel outpan = new JPanel(); //holds the formatted text output box
+        
+        JLabel label = new JLabel("Messages:"); //label for the Messages text box
+        
+        JTextArea output = new JTextArea(); //Output text box
         output.setFont(new Font("monospaced", Font.PLAIN, 12)); // Make it monospaced characters
-
-        JTextArea messages = new JTextArea(); // accepts upto 10 characters
-
-        JButton open = new JButton("Open");
-
-        JButton save = new JButton("Save");
-
+        output.setEditable(false); //turns off editability of formatted output text box
+        
+        JTextArea messages = new JTextArea(); //accepts up to 10 characters
+        messages.setEditable(false);
+        
+        JButton open = new JButton("Open"); //Open file button
+        JButton save = new JButton("Save"); //Save file button
+        
+        //Sets the layouts of each of the three panels to BorderLayout for formatting purposes
         mespan.setLayout(new BorderLayout());
-
         outpan.setLayout(new BorderLayout());
-
         spanel.setLayout(new BorderLayout());
 
-        //spanel.add(label); // Components Added using Flow Layout
+        //Creates and sets up Vertical scroll bar to formatted output text box
+        JScrollPane oVert = new JScrollPane(output);
+        oVert.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
+        //Creates and sets up Vertical scroll bar to messages text box
+        JScrollPane mVert = new JScrollPane(messages);
+        mVert.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        //spanel.add(label); // Components Added using Flow Layout
-
-        mespan.add(BorderLayout.CENTER, messages);
-
+        //Adds Messages text box and messages label to the mespan Panel
+        mespan.add(BorderLayout.CENTER, mVert);
         mespan.add(BorderLayout.NORTH, label);
-
+        
+        //Adds Open and Save buttons to the bpanel
+        bpanel.setLayout(new GridLayout(2,1));
+        bpanel.add(open);
+        bpanel.add(save);
+        
+        //Adds the button and messages panels to one single spanel
         spanel.add(BorderLayout.WEST, bpanel);
-
         spanel.add(BorderLayout.CENTER, mespan);
 
-        bpanel.setLayout(new GridLayout(2,1));
 
-        bpanel.add(open);
-
-        bpanel.add(save);
-
-        //Adding Components to the frame.
+        //Adding component panels to the JFrame
         frame.add(BorderLayout.SOUTH, spanel);
+        frame.add(BorderLayout.CENTER, oVert);
         
-        frame.add(BorderLayout.CENTER, output);
-        
+        //Sets a size for the components to keep them at a decent viewing ratio
         bpanel.setPreferredSize(new Dimension(200,100));
-        
         spanel.setPreferredSize(new Dimension(500,100));
-        
         frame.setVisible(true);
+        
         //Adding Action Listener to Save Button
         save.addActionListener(new ActionListener()
         {
