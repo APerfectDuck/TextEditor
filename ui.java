@@ -588,7 +588,8 @@ public class ui
 												char_idx--;
 												if(char_idx<1)
 												{
-													errorprinter("Error", messages);
+													errorprinter("Error: Word longer than maximum line length.", messages);
+													char_idx = Math.min(cmds[0]-1,j.length()-1);
 													break;
 												}
 											}
