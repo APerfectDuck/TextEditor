@@ -93,6 +93,7 @@ public class ui
 	{
 		for(int i=0;i<=idx;i++)
 			sendline(lines[i], finaltxt);
+		idx = back_to_empty(lines);
 		return idx;
 	}
 	
@@ -359,11 +360,11 @@ public class ui
 			{
 				if(cmds[7] == 2) // if 2 columns were specified and it was changed to 1, print everything in 2 column fashion, change line length back to 80
 				{
-					if(!lines[0].isEmpty())
-					{
+					//if(!lines[0].isEmpty())
+					//{
 						idx = sendgroup2columns(cmds, lines, idx, finaltxt);
 						back_to_empty(lines);
-					}
+					//}
 					cmds[0] = 80;
 				}
 				cmds[7] = 1;
@@ -372,11 +373,11 @@ public class ui
 			{
 				if(cmds[7] == 1) // if 1 column was specified and it was changed to 2, print everything so far in 1 column fashion, change line length to 35
 				{	
-					if(!lines[0].isEmpty())
-					{
+					//if(!lines[0].isEmpty())
+					//{
 						idx = sendgroup(cmds, lines, idx, finaltxt);
 						back_to_empty(lines);
-					}
+					//}
 
 					cmds[0] = 35;
 				}
@@ -491,19 +492,17 @@ public class ui
 						while (sc.hasNextLine()) {
 							String j =sc.nextLine();
 							// Handle commands
+							if(cmds[8]==1) // First handle blank lines
+								idx = blanklinehandler(cmds, lines, idx);
+							if (cmds[4] == 1) // Then handle titles to be printed
+							{
+								idx = titleprinterln(cmds,j, lines, idx, messages);
+								if (cmds[3] == 2) // Print an extra new line if doublespaced
+									idx ++;
+							}
 							if (j.startsWith("-"))
 									idx = commandhandler(cmds, j, sc, lines, idx, messages, finaltxt);
 							// Handle printing text
-							else
-							{
-								if(cmds[8]==1) // First handle blank lines
-									idx = blanklinehandler(cmds, lines, idx);
-								if (cmds[4] == 1) // Then handle titles to be printed
-								{
-									idx = titleprinterln(cmds,j, lines, idx, messages);
-									if (cmds[3] == 2) // Print an extra new line if doublespaced
-										idx ++;
-								}
 								else // Then handle all other formatting
 								{
 									if( (cmds[7] == 1 && cmds[5]<cmds[0]) || (cmds[7] == 2 && cmds[5]<35) ) // If paragraph indentation is valid, make the indentations
@@ -602,7 +601,6 @@ public class ui
 											}
 										}
 								    }
-								}
 							}
 						}
 						// Print any lines remaining.
