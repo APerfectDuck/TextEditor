@@ -415,7 +415,7 @@ public class ui
         messages.setEditable(false);
         
         JButton open = new JButton("Open"); //Open file button
-        JButton save = new JButton("Save"); //Save file button
+        JButton save = new JButton("Save As"); //Save file button
         
         //Sets the layouts of each of the three panels to BorderLayout for formatting purposes
         mespan.setLayout(new BorderLayout());
