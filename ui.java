@@ -453,17 +453,8 @@ public class ui
         spanel.setPreferredSize(new Dimension(500,100));
         frame.setVisible(true);
         
-        //Adding Action Listener to Save Button
-        save.addActionListener(new ActionListener()
-        {
-	        public void actionPerformed(ActionEvent e)
-	        {
-	        messages.setText("Temporary Save Successful!");
-	        }
-        });
-        //Adding Action Listener to  Open Button
         JFileChooser chooser = new JFileChooser();
-        //File f;
+
         open.addActionListener(new ActionListener()
         {
 	        public void actionPerformed(ActionEvent e)
@@ -662,6 +653,37 @@ public class ui
 				}      	
 	        }
         });
+        
+        //Adding Action Listener to Save Button
+        save.addActionListener(new ActionListener()
+        {
+	        public void actionPerformed(ActionEvent e)
+	        {
+	        	String title = output.getText();
+	        	FileWriter fw;
+	        	File fts;
+	        	
+	        	chooser.setDialogTitle("Choose where to save the file:");
+	            FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files Only", "txt");
+	            chooser.setFileFilter(filter);
+	        	int userSelection = chooser.showSaveDialog(frame);
+	        	if(userSelection == chooser.APPROVE_OPTION)
+	        	{
+		        		fts = chooser.getSelectedFile();
+		        		//messages.add("Saved file to: " fts.getAbsolutePath());
+					try {
+						fw = new FileWriter(fts.getAbsolutePath() + ".txt");
+						fw.write(title);
+						fw.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+	        	}
+	        }
+        });
+        //Adding Action Listener to  Open Button
+        //File f;
 	}
 
 }
