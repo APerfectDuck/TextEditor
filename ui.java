@@ -1,5 +1,3 @@
-package Text_formatter;
-
 import java.awt.*;
 import java.awt.List;
 import java.awt.event.ActionEvent;
@@ -178,8 +176,8 @@ public class ui
 		s = s.trim();
 		int num_words = words.length;
 		int num_extra = cmds[0] - s.length();
-		int extra_spaces_per = num_extra/(num_words-1); // spaces per word (in addition to the normal 1 to achieve equal spacing
-		int uneven_fillers = num_extra % (num_words-1); // extra spaces to throw in to make it even
+		int extra_spaces_per = num_extra/(Math.max(1,num_words-1)); // spaces per word (in addition to the normal 1 to achieve equal spacing
+		int uneven_fillers = num_extra % (Math.max(1,num_words-1)); // extra spaces to throw in to make it even
 		for(int i=0;i<num_words;i++)
 		{
 			idx = defaultprinter(words[i], lines, idx); // print the next word
@@ -583,18 +581,24 @@ public class ui
 										else
 										{
 											int char_idx = Math.min(cmds[0]-1,j.length()-1);
+											boolean tooLong = false;
 											while(j.charAt(char_idx)!=' ')
 											{
 												char_idx--;
 												if(char_idx<1)
 												{
-													errorprinter("Error: Word longer than maximum line length.", messages);
-													char_idx = Math.min(cmds[0]-1,j.length()-1);
+													tooLong = true;
+													errorprinter("Warning: Word longer than max length, breaking up into segments.\n.", messages);
+													char_idx = Math.min(cmds[0],j.length()-1);
 													break;
 												}
+												tooLong = false;
 											}
 											String first_part = j.substring(0, char_idx);
-											j = j.substring(char_idx+1, j.length());
+											if(tooLong == false)
+												j = j.substring(char_idx+1, j.length());
+											else
+												j = j.substring(char_idx, j.length());
 											idx = smartprinter(cmds, first_part, lines, idx);
 											idx++;
 											if(cmds[3]==2)
