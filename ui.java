@@ -500,107 +500,107 @@ public class ui
 								if (cmds[3] == 2) // Print an extra new line if doublespaced
 									idx ++;
 							}
-							if (j.startsWith("-"))
+							else if (j.startsWith("-"))
 									idx = commandhandler(cmds, j, sc, lines, idx, messages, finaltxt);
 							// Handle printing text
-								else // Then handle all other formatting
+							else // Then handle all other formatting
+							{
+								if( (cmds[7] == 1 && cmds[5]<cmds[0]) || (cmds[7] == 2 && cmds[5]<35) ) // If paragraph indentation is valid, make the indentations
 								{
-									if( (cmds[7] == 1 && cmds[5]<cmds[0]) || (cmds[7] == 2 && cmds[5]<35) ) // If paragraph indentation is valid, make the indentations
+									int count = cmds[5];
+									while(count > 0)
 									{
-										int count = cmds[5];
-										while(count > 0)
-										{
-											j = " "+ j;
-											count--;
-										}
+										j = " "+ j;
+										count--;
 									}
-									else
-										errorprinter("Error: Paragraph indentation is too large", messages);
-								    if(cmds[2] == 1) // Then develop lines with wrapping.
+								}
+								else
+									errorprinter("Error: Paragraph indentation is too large", messages);
+							    if(cmds[2] == 1) // Then develop lines with wrapping.
+								{
+									while(!j.isEmpty()) // While j still has characters to read, add them to the lines
 									{
-										while(!j.isEmpty()) // While j still has characters to read, add them to the lines
+										j = j.trim();
+										//lines[idx] = lines[idx].trim();
+										int chars_remaining = cmds[0]-lines[idx].length();
+										if(j.length()<chars_remaining) // If there's space to hold the whole line, add it
 										{
-											j = j.trim();
-											//lines[idx] = lines[idx].trim();
-											int chars_remaining = cmds[0]-lines[idx].length();
-											if(j.length()<chars_remaining) // If there's space to hold the whole line, add it
-											{
-												idx = smartprinter(cmds, j, lines, idx);
+											idx = smartprinter(cmds, j, lines, idx);
+											idx++;
+											if(cmds[3]==2)
+												idx++;
+											j = "";
+										}
+										else // If there isn't space for the whole line, add what fits
+										{
+											int index = j.indexOf(' ');
+											String firstword;
+										    if (index > -1) // if there's more than one word
+										    {
+										        firstword = j.substring(0, index).trim(); // get the first word
+										        j = j.substring(index).trim(); // store the rest as j
+										    } 
+										    else 
+										    {
+										        firstword = j; // get the whole thing
+										        j = ""; // store the rest as j
+										    }
+										    if (firstword.length()<chars_remaining)
+										    {
+												idx = smartprinter(cmds, firstword, lines, idx);
 												idx++;
 												if(cmds[3]==2)
 													idx++;
-												j = "";
-											}
-											else // If there isn't space for the whole line, add what fits
-											{
-												int index = j.indexOf(' ');
-												String firstword;
-											    if (index > -1) // if there's more than one word
-											    {
-											        firstword = j.substring(0, index).trim(); // get the first word
-											        j = j.substring(index).trim(); // store the rest as j
-											    } 
-											    else 
-											    {
-											        firstword = j; // get the whole thing
-											        j = ""; // store the rest as j
-											    }
-											    if (firstword.length()<chars_remaining)
-											    {
-													idx = smartprinter(cmds, firstword, lines, idx);
-													idx++;
-													if(cmds[3]==2)
-														idx++;
-													firstword = "";
-											    }
-											    else if(firstword.length()>cmds[0]) //If a word is too big, throw an error message.
-											    {
-											    	errorprinter("Error: A word is longer than the allowed line length.  Skipping line.", messages);
-											    	break;
-											    }
-											    else // If the word doesn't fit, wrap up this line and move on to the next line in output
-											    {
-											    	idx++;
-													if(cmds[3]==2)
-														idx++;
-											    	idx = smartprinter(cmds, firstword, lines, idx);
-											    }
-											}
-										}
-									}
-								    else // Develop lines with no wrapping
-								    {
-										while(j.length()>0)
-										{
-											if(j.length()<=cmds[0])
-											{
-												idx = smartprinter(cmds, j, lines, idx);
-												idx++;
+												firstword = "";
+										    }
+										    else if(firstword.length()>cmds[0]) //If a word is too big, throw an error message.
+										    {
+										    	errorprinter("Error: A word is longer than the allowed line length.  Skipping line.", messages);
+										    	break;
+										    }
+										    else // If the word doesn't fit, wrap up this line and move on to the next line in output
+										    {
+										    	idx++;
 												if(cmds[3]==2)
 													idx++;
-												j = "";
-											}
-											else
+										    	idx = smartprinter(cmds, firstword, lines, idx);
+										    }
+										}
+									}
+								}
+							    else // Develop lines with no wrapping
+							    {
+									while(j.length()>0)
+									{
+										if(j.length()<=cmds[0])
+										{
+											idx = smartprinter(cmds, j, lines, idx);
+											idx++;
+											if(cmds[3]==2)
+												idx++;
+											j = "";
+										}
+										else
+										{
+											int char_idx = Math.min(cmds[0]-1,j.length()-1);
+											while(j.charAt(char_idx)!=' ')
 											{
-												int char_idx = Math.min(cmds[0]-1,j.length()-1);
-												while(j.charAt(char_idx)!=' ')
+												char_idx--;
+												if(char_idx<1)
 												{
-													char_idx--;
-													if(char_idx<1)
-													{
-														errorprinter("Error", messages);
-														break;
-													}
+													errorprinter("Error", messages);
+													break;
 												}
-												String first_part = j.substring(0, char_idx);
-												j = j.substring(char_idx+1, j.length());
-												idx = smartprinter(cmds, first_part, lines, idx);
-												idx++;
-												if(cmds[3]==2)
-													idx++;
 											}
+											String first_part = j.substring(0, char_idx);
+											j = j.substring(char_idx+1, j.length());
+											idx = smartprinter(cmds, first_part, lines, idx);
+											idx++;
+											if(cmds[3]==2)
+												idx++;
 										}
-								    }
+									}
+							    }
 							}
 						}
 						// Print any lines remaining.
