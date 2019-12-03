@@ -32,7 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @Class_ID CSE 360: 85141
  * @TeamProject 15
  * @Description The program is a text formatter tool that takes strings as inputs
- * and chanages the font and orientation according to user commands
+ * and changes the font and orientation according to user commands
 */
 
 public class ui
